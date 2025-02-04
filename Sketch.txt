@@ -1,0 +1,137 @@
+int ctr_a = 9;
+int ctr_b = 8;
+int ctr_c = 11;
+int ctr_d = 10;
+int t = 1500; // Delay between steps (microseconds)
+
+// Number of steps for 90 degrees (modify based on your motor step angle)
+int stepsFor90 = 50;
+
+void setup() {
+    pinMode(ctr_a, OUTPUT);
+    pinMode(ctr_b, OUTPUT);
+    pinMode(ctr_c, OUTPUT);
+    pinMode(ctr_d, OUTPUT);
+    Serial.begin(9600); // Initialize serial communication
+}
+
+void rotateClockwise(int steps) {
+    for (int i = 0; i < steps; i++) {
+        digitalWrite(ctr_a, LOW); // A
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, LOW); // AB
+        digitalWrite(ctr_b, LOW);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // B
+        digitalWrite(ctr_b, LOW);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // BC
+        digitalWrite(ctr_b, LOW);
+        digitalWrite(ctr_c, LOW);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // C
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, LOW);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // CD
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, LOW);
+        digitalWrite(ctr_d, LOW);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // D
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, LOW);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, LOW); // DA
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, LOW);
+        delayMicroseconds(t);
+    }
+}
+
+void rotateCounterClockwise(int steps) {
+    for (int i = 0; i < steps; i++) {
+        digitalWrite(ctr_a, LOW); // DA
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, LOW);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // D
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, LOW);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // CD
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, LOW);
+        digitalWrite(ctr_d, LOW);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // C
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, LOW);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // BC
+        digitalWrite(ctr_b, LOW);
+        digitalWrite(ctr_c, LOW);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, HIGH); // B
+        digitalWrite(ctr_b, LOW);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, LOW); // AB
+        digitalWrite(ctr_b, LOW);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+
+        digitalWrite(ctr_a, LOW); // A
+        digitalWrite(ctr_b, HIGH);
+        digitalWrite(ctr_c, HIGH);
+        digitalWrite(ctr_d, HIGH);
+        delayMicroseconds(t);
+    }
+}
+
+void loop() {
+    if (Serial.available() > 0) {
+        String command = Serial.readStringUntil('\n'); // Read input from serial
+        command.trim(); // Remove extra spaces or newlines
+
+        if (command == "clockwise") {
+            rotateClockwise(stepsFor90);  // Rotate 90° clockwise
+            delay(1000); // Wait for 1 second
+            rotateCounterClockwise(stepsFor90); // Return to original position
+        } else if (command == "anticlockwise") {
+            rotateCounterClockwise(stepsFor90);  // Rotate 90° counterclockwise
+            delay(1000); // Wait for 1 second
+            rotateClockwise(stepsFor90); // Return to original position
+        }
+    }
+}
